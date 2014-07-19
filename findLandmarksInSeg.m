@@ -1,4 +1,4 @@
-function [L,S,T,maxes] = find_landmarks2(D,freq,ID)
+function [L,S,T,maxes] = findLandmarksInSeg(D,freq,ID)
     % this is find_landmarks2 for long segments ( doesn't zero pad or mask)
 
     % SETTINGS 
@@ -28,6 +28,7 @@ function [L,S,T,maxes] = find_landmarks2(D,freq,ID)
     % Time to look ahead
     targetdt = 3;  % (LIMITED TO <64 IN landmark2hash by current bits)  64 --> 2
 
+    numCh = size(D,1);
 
     switch freq
         case 5000
@@ -41,7 +42,13 @@ function [L,S,T,maxes] = find_landmarks2(D,freq,ID)
             freq = freq/dfreq;
 
             %Adaptive threshold for centroid finder
-            thresh = 1.2E5;
+            % dan added 7/20, choose mex threshold for patient 3
+            if numCh ~= 55
+                thresh = 1.2E5;
+            else
+                thresh = 1E6;
+            end
+            
             lenMask = 1024;
 %             % add zero buffer for total signal length of 2048
 %             zB = zeros(size(D,1),512);
@@ -129,7 +136,7 @@ function [L,S,T,maxes] = find_landmarks2(D,freq,ID)
 
     dt = (1/lenMask); % dt = recording period (neo_vers accounts for zero pads)
     s0  = 3*dt; % s0 = smallest scale; default = 6
-    ds = 0.08;  % ds = spacing between scales; default = 0.15
+    ds = 0.08;  % ds = spacing between scales; default = 0.08 -->0.15
     NbSc = 64;  % nb = number of scales
     SCA = {s0,ds,NbSc};
 
@@ -145,9 +152,12 @@ function [L,S,T,maxes] = find_landmarks2(D,freq,ID)
         % disp(h);
         
         %tim added 2014-06-26, use faster morf for 1sec segments
-        
-        [S,scales] = morFinger1sec(D(h,:),dt,SCA);
-        
+        %dan added 7/20, choose mex for patient 3
+        if numCh ~= 55
+            [S,scales] = morFinger1sec(D(h,:),dt,SCA);
+        else
+            [S,scales] = mexFinger1sec(D(h,:),dt,SCA);            
+        end
 %         %discriminates to only use for 1sec clips
 %         if length(D)<=freq+20
 %             [S,scales] = morFinger1sec(D(h,:),dt,SCA);

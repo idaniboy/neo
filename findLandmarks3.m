@@ -67,7 +67,7 @@ function [L,S,T,maxes] = findLandmarks3(D,freq,ID,clipNum)
             freq = freq/dfreq;
 
             %Adaptive threshold for centroid finder
-            thresh = 1.2E5;
+            thresh = 1E6;
 
             % add zero buffer for total signal length of 2048
             zB = zeros(size(D,1),512);
@@ -138,7 +138,7 @@ function [L,S,T,maxes] = findLandmarks3(D,freq,ID,clipNum)
 
     dt = (1/lenMask); % dt = recording period (neo_vers accounts for zero pads)
     s0  = 3*dt; % s0 = smallest scale; default = 6
-    ds = 0.08;  % ds = spacing between scales; default = 0.15
+    ds = 0.15;  % ds = spacing between scales; default = 0.08-->0.015
     NbSc = 64;  % nb = number of scales
     SCA = {s0,ds,NbSc};
 
@@ -155,7 +155,7 @@ function [L,S,T,maxes] = findLandmarks3(D,freq,ID,clipNum)
         
         %tim added 2014-06-26, use faster morf for 1sec segments
         
-        [S,scales] = morFinger1sec(D(h,:),dt,SCA);
+        [S,scales] = mexFinger1sec(D(h,:),dt,SCA);
         %oS = S;%for debugging
         
 %         %discriminates to only use for 1sec clips

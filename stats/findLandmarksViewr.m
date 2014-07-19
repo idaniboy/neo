@@ -42,7 +42,7 @@ function [L,S,T,maxes] = findLandmarksViewr(D,freq,ID)
             freq = freq/dfreq;
 
             %Adaptive threshold for centroid finder
-            thresh = 1.2E5;
+            thresh = 1E6;
 
             % add zero buffer for total signal length of 2048
             zB = zeros(size(D,1),512);
@@ -113,7 +113,7 @@ function [L,S,T,maxes] = findLandmarksViewr(D,freq,ID)
 
     dt = (1/lenMask); % dt = recording period (neo_vers accounts for zero pads)
     s0  = 3*dt; % s0 = smallest scale; default = 6
-    ds = 0.08;  % ds = spacing between scales; default = 0.15
+    ds = 0.15;  % ds = spacing between scales; default = 0.15
     NbSc = 64;  % nb = number of scales
     SCA = {s0,ds,NbSc};
 

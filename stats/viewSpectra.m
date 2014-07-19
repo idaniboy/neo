@@ -1,14 +1,14 @@
 
 
 %your matlab directory
-matdir='/Users/idaniboy/Documents/MATLAB/';
+matdir='/Volumes/bobo/';
 %matdir='C:\Users\paul\Documents\MATLAB\';
 
 %clips dir(relative to matlab, leave off^ that slash, as below. these get mushed together)
-clipsdir='kaggleClips/ictalSegs/';
+clipsdir='kaggleClips/';
 
 %subject to run it on (do 1 at a time for now)
-clipDirNames={'Patient_8'};
+clipDirNames={'Patient_3'};
 
 % %automation will require data to be in separate folders per patient with _ in folder name
 % a=dir(strcat(matdir,clipsdir,'*_*'));

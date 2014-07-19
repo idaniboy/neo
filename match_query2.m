@@ -58,7 +58,8 @@ uF=62;
 % choose findLandmarks3 or findLandmarks2
 % in future automate this off of autorandom sampling of # of high freq...
 % landmarks found
-if length(fieldnames(channels)) == 30
+% this identifies patient 3
+if length(fieldnames(channels)) == 55
 %     %non clip, segment search    
 %     Lq= findLandmarks3(data,freq,channels);
     %clip search
