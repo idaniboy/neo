@@ -2,18 +2,20 @@ function createHashTableBySeizures()
 
     %your matlab directory
     if ~ispc
-        matdir='/Users/idaniboy/Documents/MATLAB/';
-        clipsdir='kaggleClips/ictalSegs/';
+        matdir='/Volumes/bobo/';
+        clipsdir='kaggleClips/';
+        startClip=2; %first clip in mac is .dsStore
     else
         matdir='C:\Users\paul\Documents\MATLAB\';
         clipsdir='kaggleShazam\clips\';
+        startClip=1;
     end
 
     %requires data to be in separate folders per patient with _ in folder name
     a=dir(strcat(matdir,clipsdir,'*_*'));
     clipDirNames={a.name};%{'Dog_1','Dog_2','Dog_3','Dog_4','Patient_1','Patient_2','Patient_3','Patient_4','Patient_5','Patient_6','Patient_7','Patient_8'};%,'Patient_6}%;
     
-    for nthDir=1:length(clipDirNames);
+    for nthDir=startClip:length(clipDirNames);
         clear save_hashes
         clipLoc=strcat(matdir,clipsdir,clipDirNames{nthDir});
         %load concatenated_ filenames

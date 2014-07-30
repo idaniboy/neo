@@ -1,11 +1,14 @@
 
 
-%your matlab directory
-matdir='/Volumes/bobo/';
+%your matlab directory & clips dir
+% matdir='/Volumes/bobo/';
+% clipsdir='kaggleClips/';
 %matdir='C:\Users\paul\Documents\MATLAB\';
 
+    matdir='/Users/idaniboy/Documents/MATLAB/';
+    clipsdir='kaggleClips/ictalSegs/';
+
 %clips dir(relative to matlab, leave off^ that slash, as below. these get mushed together)
-clipsdir='kaggleClips/';
 
 %subject to run it on (do 1 at a time for now)
 clipDirNames={'Patient_3'};

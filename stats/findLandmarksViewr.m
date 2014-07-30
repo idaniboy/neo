@@ -42,7 +42,7 @@ function [L,S,T,maxes] = findLandmarksViewr(D,freq,ID)
             freq = freq/dfreq;
 
             %Adaptive threshold for centroid finder
-            thresh = 1E6;
+            thresh = 5E7;
 
             % add zero buffer for total signal length of 2048
             zB = zeros(size(D,1),512);
@@ -129,8 +129,8 @@ function [L,S,T,maxes] = findLandmarksViewr(D,freq,ID)
         % disp(h);
         
         %tim added 2014-06-26, use faster morf for 1sec segments
-        
-        [S,scales] = morFinger1sec(D(h,:),dt,SCA);
+        lpData = lowPassFilterTest(D(h,:),freq);
+        [S,scales] = mexFinger1sec(lpData,dt,SCA);
         oS = S;%for debugging
         
 %         %discriminates to only use for 1sec clips
@@ -223,18 +223,20 @@ function [L,S,T,maxes] = findLandmarksViewr(D,freq,ID)
 %         disp(maxes2);pause
 
 % %        debugging landmark finding algo
-        figure;
-        subplot(3,2,1);imagesc(oS);hold on; scatter(maxes2(:,1)+rezBoxes+4,maxes2(:,2));
-        subplot(3,2,2);imagesc(S);hold on; scatter(maxes2(:,1),maxes2(:,2));
-        subplot(3,2,3);imagesc(d');hold on; scatter(maxes2(:,1),maxes2(:,2));drawnow
-%       subplot(3,2,4);plot(Ds(h,:));
-        subplot(3,2,4);imagesc(mask);        
-        subplot(3,2,5);plot(D(h,:));axis tight;drawnow;
-        subplot(3,2,6);plot(oD(h,:));axis tight;drawnow;
-        pause
-        close
-        close
-        
+        if h == 5 || h == 6
+            figure;
+            subplot(4,2,1);imagesc(oS);hold on; scatter(maxes2(:,1)+rezBoxes+4,maxes2(:,2));
+            subplot(4,2,2);imagesc(S);hold on; scatter(maxes2(:,1),maxes2(:,2));
+            subplot(4,2,3);imagesc(d');hold on; scatter(maxes2(:,1),maxes2(:,2));drawnow
+    %       subplot(4,2,4);plot(Ds(h,:));
+            subplot(4,2,4);imagesc(mask);        
+            subplot(4,2,5);plot(D(h,:));axis tight;drawnow;
+            subplot(4,2,6);plot(oD(h,:));axis tight;drawnow;title(num2str(h));
+            subplot(4,2,7);plot(lpData);axis tight;drawnow;title(num2str(h));
+            pause
+            close
+            close
+        end        
         %add column with channel info
         maxes2 = horzcat(maxes2,repmat(h,size(maxes2,1),1))';  
         

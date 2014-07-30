@@ -1,16 +1,16 @@
+% Concatenates Ictal seizure segments
+
 
 %your matlab directory
-matdir='/Users/idaniboy/Documents/MATLAB/';
-%matdir='C:\Users\paul\Documents\MATLAB\';
-%clips dir(relative to matlab, leave off^ that slash, as below. these get mushed together)
-clipsdir='kaggleClips/ictalSegs/';
+        matdir='/Volumes/bobo/';
+        clipsdir='kaggleClips/';
 
 % %upper limit for concatenated matrix length, only use if memory problems
 % cMaxSize=1e7;
 
-% patients={'Dog_1','Dog_2','Dog_3','Dog_4','Patient_1','Patient_2','Patient_3','Patient_4','Patient_5','Patient_6','Patient_7','Patient_8'};
+%patients={'Dog_1','Dog_2','Dog_3','Dog_4','Patient_1','Patient_2','Patient_3','Patient_4','Patient_5','Patient_6','Patient_7','Patient_8'};
 
-patients={'Patient_8'};
+patients={'Patient_3'};
 
 
 %not useful, just initializing
@@ -21,14 +21,14 @@ for ii=1:length(patients)
     %concatenate ictal
     %find info
     nIctalClips=length(dir(strcat(matdir,clipsdir,patients{ii},'/*_ictal_s*.mat')));
-    [data,freq,latency,channels]=sParLoad(strcat(patients{ii},'_ictal_segment_1'));
+    [data,freq,latency,channels]=sParLoad(strcat(matdir,clipsdir,patients{ii},filesep,patients{ii},'_ictal_segment_1'));
     nSamplesPerSegment=size(data,2);
     nChannels=size(data,1);
     nthSeizure=0;
     D=zeros(nChannels,nIctalClips*nSamplesPerSegment);
 
     for i=1:nIctalClips
-        [data,freq,latency]=sParLoad(strcat(patients{ii},'_ictal_segment_',num2str(i)));
+        [data,freq,latency]=sParLoad(strcat(matdir,clipsdir,patients{ii},filesep,patients{ii},'_ictal_segment_',num2str(i)));
         
         %group individual seizures together. assumes ordered by time.
         if latency==0 || i==nIctalClips

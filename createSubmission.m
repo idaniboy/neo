@@ -17,11 +17,13 @@ nSamples=1000;
 
 %your matlab directory
     if ~ispc
-        matdir='/Users/idaniboy/Documents/MATLAB/';
-        clipsdir='kaggleClips/ictalSegs/';
+        matdir='/Volumes/bobo/';
+        clipsdir='kaggleClips/';
+startClip=2;
     else
         matdir='C:\Users\paul\Documents\MATLAB\';
         clipsdir='kaggleShazam\clips\';
+        startClip=1;
     end
 
 % %automation requires data to be in separate folders per patient with _ in folder name
@@ -37,7 +39,7 @@ total=zeros(nSubjects,nSamples,2);
 
 %find searchScore
 tic
-for ii=1:nSubjects
+for ii=startClip:nSubjects
     
     %without this line, hash tables from other clips might get used, comment out
     %for faster 1-subject testing only
