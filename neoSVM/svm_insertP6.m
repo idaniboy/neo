@@ -1,5 +1,6 @@
 %% Make submission from previously generated testSegment searchScores
-% add p3 SVM
+% add p6 SVM
+% also includes latency SVM
 
 % your matlab & clips directory
 matdir='/Volumes/bobo/';
@@ -8,7 +9,7 @@ clipDirNames={'Dog_1','Dog_2','Dog_3','Dog_4','Patient_1','Patient_2','Patient_3
 nClips=length(clipDirNames);
 
 %check existence of resultsCell
-size(resultsCell)
+%size(resultsCell)
 %predsSVM=cell(1,nClips);
 %scoresSVM=cell(1,nClips);
 
@@ -21,7 +22,7 @@ if true,
 end
 
 %% use SVM for patient 3
-for ii=7:7 
+for ii=10:10 
     
     % load appropriate SVM classifier
     load(strcat('/Users/idaniboy/Documents/MATLAB/svmTrained/svmM_Subject_',num2str(ii)),'cSvmM');    
@@ -29,7 +30,7 @@ for ii=7:7
     clipLoc=strcat(matdir,clipsdir,clipDirNames{ii});
     testClips=dir(strcat(clipLoc,filesep,'*_test_segment*.mat'));
     nTests=length(testClips);
-    scoMeth = {'mspSco0506','mspSco1011','rmsmT3','phS'};
+    scoMeth = {'mspSco 07,08,09', 'mspSco 15,16', 'mspSco 23,24,25', 'rmsm'}; % 'for P6
 
     %data stores
     TlfS = zeros(3,nTests); %ictal low freq score    
@@ -48,28 +49,34 @@ for ii=7:7
             [data,~,freq,~]=sParLoad_oldV(strcat(clipLoc,filesep,clipDirNames{nthDir},'_test_segment_',num2str(i),'.mat'));
 
              % Get score
-             TlfS(nthMeth,i) = lfScoreGet(data,scoMeth{nthMeth},numCh,freq,clipLoc);
+             TlfS(nthMeth,i) = lfScoreGetPerChan(data,scoMeth{nthMeth},numCh,freq,clipLoc);
 
         end
     end
 end   
 
 %% join scores
-
-%sS7 = 1-resultsCell{1, 7}.seizure(:,7);
+load(strcat('/Users/idaniboy/Documents/MATLAB/svmTrained/svmM_Subject_',num2str(ii)),'cSvmM');
+%sS10 = 1-resultsCell{1, 10}.seizure(:,10);
 %X = TlfS';
-X = [TlfS(1,:);TlfS(2,:);TlfS(3,:)]';
+X = [TlfS(1:3,:)]';
 
 % predict w/SVM
 [predLabel,postProbs] = predict(cSvmM,X);
 seizure = postProbs(:,2);   
-    
-%assume early probability is same as seizure
-early=seizure;
+disp('done predicting')
+figure;plot(seizure)
+
+% predict seizureLatency <=15 sec w/SVM
+%early=seizure; %assume early probability is same as seizure
+[predLatLabel,postLatProbs] = predict(cLatSvmM,X);
+early = postLatProbs(:,2);   
+
+%store table into predsSVM
 predsSVM{ii} = table(clip,seizure,early);
 scoresSVM{ii} = X;
 
-save('sSVMResults20140802_try1.mat','predsSVM','scoresSVM');
+save('sSVMResults20140803.mat','predsSVM','scoresSVM');
 toc 
 warning(s)  % restore the warning state
 disp('done')

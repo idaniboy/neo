@@ -9,7 +9,7 @@
 % cMaxSize=1e7;
 
 %patients={'Dog_1','Dog_2','Dog_3','Dog_4','Patient_1','Patient_2','Patient_3','Patient_4','Patient_5','Patient_6','Patient_7','Patient_8'};
-patients={'Patient_3'};
+patients={'Patient_2'};
 %patients={'Patient_8'};
 
 for ii=1:length(patients) 
@@ -33,9 +33,11 @@ for ii=1:length(patients)
         D(:,((i-j*sampPerSeg)-1)*nSamplesPerSegment+1:(i-j*sampPerSeg)*nSamplesPerSegment)=data;
   
         if i ==sampPerSeg*(j+1)
-            save(strcat(patients{ii},'_interictal_concatenated_',num2str(j+1),'.mat'),'D','channels','freq');
+            save(strcat(matdir,clipsdir,patients{ii},filesep,'interictal_concatenated',filesep,patients{ii},'_interictal_concatenated_',num2str(j+1),'.mat'),'D','channels','freq');
             j = j + 1;
             D=zeros(nChannels,sampPerSeg*nSamplesPerSegment);    
+                    disp(ceil((i/nIIctalClips)*100))
+
         end
     end
     
